@@ -1,3 +1,34 @@
+// Mobile Menu Toggle
+const mobileMenuBtn = document.createElement('button');
+mobileMenuBtn.className = 'mobile-menu-btn';
+mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+mobileMenuBtn.setAttribute('aria-label', 'Toggle menu');
+
+// Add mobile menu button to navbar
+const navContainer = document.querySelector('.nav-container');
+if (navContainer && window.innerWidth <= 768) {
+    navContainer.appendChild(mobileMenuBtn);
+}
+
+mobileMenuBtn.addEventListener('click', function() {
+    const navMenu = document.querySelector('.nav-menu');
+    navMenu.classList.toggle('active');
+    this.innerHTML = navMenu.classList.contains('active') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+    });
+});
+
 // Dark Mode Toggle
 const themeToggle = document.getElementById('themeToggle');
 const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -8,7 +39,7 @@ const currentTheme = localStorage.getItem('theme') ||
 
 // Apply theme immediately on load
 document.documentElement.setAttribute('data-theme', currentTheme);
-document.body.style.transition = 'none'; // Prevent flash on load
+document.body.style.transition = 'none';
 setTimeout(() => {
     document.body.style.transition = 'background-color 0.6s ease, color 0.6s ease';
 }, 100);
@@ -19,16 +50,11 @@ themeToggle.addEventListener('click', function() {
     
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    
-    // Force repaint to ensure smooth transition
-    document.body.style.display = 'none';
-    document.body.offsetHeight; // Trigger reflow
-    document.body.style.display = 'block';
 });
 
 // Enhanced Intersection Observer for bidirectional animations
 const observerOptions = {
-    threshold: 0.2,
+    threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
 };
 
@@ -56,21 +82,11 @@ const observer = new IntersectionObserver((entries) => {
                     }, 100);
                 });
             }
-            
-            // Special handling for project cards
-            if (element.classList.contains('project-card')) {
-                element.classList.add('animated');
-            }
         } else {
             // Only remove animation when scrolling up past element
             if (scrollDirection === 'up' && window.scrollY < entry.boundingClientRect.top) {
                 element.classList.remove('animated');
                 element.classList.add('animate-out');
-                
-                // Reset project card animations
-                if (element.classList.contains('project-card')) {
-                    element.classList.remove('animated');
-                }
             }
         }
     });
@@ -78,11 +94,6 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe all animate-on-scroll elements
 document.querySelectorAll('.animate-on-scroll').forEach(el => {
-    observer.observe(el);
-});
-
-// Observe project cards separately for better control
-document.querySelectorAll('.project-card').forEach(el => {
     observer.observe(el);
 });
 
@@ -182,54 +193,64 @@ window.addEventListener('load', () => {
     });
 });
 
-// Modern minimal hover effect for project cards
-document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-10px) scale(1.02)';
-    });
+// Handle window resize
+window.addEventListener('resize', function() {
+    const navMenu = document.querySelector('.nav-menu');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     
-    card.addEventListener('mouseleave', () => {
-        if (card.classList.contains('animated')) {
-            card.style.transform = 'translateY(0) scale(1)';
+    if (window.innerWidth > 768) {
+        navMenu.classList.remove('active');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
         }
-    });
-});
-
-// Add subtle parallax effect to header on scroll
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const header = document.querySelector('.header');
-    if (header) {
-        header.style.transform = `translateY(${scrolled * 0.5}px)`;
     }
 });
 
-// Profile photo intro animation
-function initProfileAnimation() {
-    const profileCard = document.querySelector('.profile-card');
-    const profilePhoto = document.querySelector('.profile-photo');
+// Profile photo animation
+document.querySelectorAll('.profile-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+    });
     
-    if (profileCard && profilePhoto) {
-        // Initial state for intro animation
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+
+// Profile photo animations
+function initProfileAnimations() {
+    const profileCard = document.querySelector('.profile-card');
+    const profileImage = document.querySelector('.profile-image');
+    
+    if (profileCard && profileImage) {
+        // Initial hidden state
         profileCard.style.opacity = '0';
         profileCard.style.transform = 'translateY(30px) scale(0.9)';
-        profilePhoto.style.transform = 'scale(0.8) rotate(-10deg)';
+        profileImage.style.transform = 'scale(0) rotate(-180deg)';
         
-        // Animate in after a delay
+        // Animate in with delay
         setTimeout(() => {
             profileCard.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             profileCard.style.opacity = '1';
             profileCard.style.transform = 'translateY(0) scale(1)';
             
-            profilePhoto.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s';
-            profilePhoto.style.transform = 'scale(1) rotate(0deg)';
+            profileImage.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s';
+            profileImage.style.transform = 'scale(1) rotate(0deg)';
         }, 800);
+        
+        // Add click animation
+        profileImage.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
     }
 }
 
-// Call this when the page loads
-window.addEventListener('load', () => {
-    // Your existing header animation code...
+// Call this in your load event
+window.addEventListener('load', function() {
+    // Your existing header animations...
     const headerElements = document.querySelectorAll('.header h1, .header p');
     headerElements.forEach((el, index) => {
         setTimeout(() => {
@@ -238,17 +259,36 @@ window.addEventListener('load', () => {
         }, 500 + (index * 300));
     });
     
-    // Add profile animation
-    initProfileAnimation();
+    // Initialize profile animations
+    initProfileAnimations();
 });
 
-// Enhanced hover effect for profile card
+// Enhanced hover effects
 document.querySelectorAll('.profile-card').forEach(card => {
+    let isHovering = false;
+    
     card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px) scale(1.02)';
+        isHovering = true;
+        this.style.transform = 'translateY(-8px) scale(1.02)';
     });
     
     card.addEventListener('mouseleave', function() {
+        isHovering = false;
         this.style.transform = 'translateY(0) scale(1)';
+    });
+    
+    // Add subtle glow effect on hover
+    card.addEventListener('mousemove', function(e) {
+        if (isHovering) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+            this.style.setProperty('--hover-angle', `${angle}deg`);
+        }
     });
 });
