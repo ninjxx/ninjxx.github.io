@@ -292,3 +292,146 @@ document.querySelectorAll('.profile-card').forEach(card => {
         }
     });
 });
+
+// Ecommerce Project Function - SIMPLE & GUARANTEED TO WORK
+function openEcommerceProject() {
+    // REPLACE THIS URL WITH YOUR ACTUAL ECOMMERCE WEBSITE URL
+    const ecommerceUrl = 'https://ninjxx.github.io/store/'; // ⚠️ CHANGE THIS!
+    
+    console.log('Opening ecommerce project:', ecommerceUrl);
+    
+    // Add click animation
+    const projectCard = document.querySelector('.ecommerce-project');
+    if (projectCard) {
+        projectCard.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            projectCard.style.transform = '';
+        }, 200);
+    }
+    
+    // Open in new tab
+    window.open(ecommerceUrl, '_blank', 'noopener,noreferrer');
+}
+
+// Project Details Modal
+function showProjectDetails(projectId) {
+    const modal = document.getElementById('projectModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    let content = '';
+    
+    switch(projectId) {
+        case 'ecommerce':
+            content = `
+                <h3>E-Commerce Platform</h3>
+                <p>A complete full-stack e-commerce solution built with modern technologies. Features include user authentication, product catalog, shopping cart, payment integration, and admin dashboard.</p>
+                
+                <div class="modal-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">MongoDB</span>
+                    <span class="tech-tag">Express</span>
+                    <span class="tech-tag">Stripe API</span>
+                    <span class="tech-tag">JWT Auth</span>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn primary" onclick="openEcommerceProject()">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Live Demo
+                    </button>
+                    <button class="modal-btn secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            `;
+            break;
+            
+        case 'fitness':
+            content = `
+                <h3>Fitness Tracking App</h3>
+                <p>Cross-platform mobile application for workout tracking, exercise planning, and fitness progress monitoring.</p>
+                
+                <div class="modal-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Firebase</span>
+                    <span class="tech-tag">Redux</span>
+                    <span class="tech-tag">TypeScript</span>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            `;
+            break;
+            
+        case 'analytics':
+            content = `
+                <h3>Analytics Dashboard</h3>
+                <p>Real-time data visualization dashboard for business metrics and KPIs.</p>
+                
+                <div class="modal-tech">
+                    <span class="tech-tag">Vue.js</span>
+                    <span class="tech-tag">D3.js</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">FastAPI</span>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            `;
+            break;
+    }
+    
+    modalContent.innerHTML = content;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('projectModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.getElementById('projectModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Close modal with escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Debug helper - check if functions are working
+console.log('Project functions loaded:');
+console.log('- openEcommerceProject()');
+console.log('- showProjectDetails()');
+console.log('- closeModal()');
+// Enhanced project card interactions
+document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        // Only trigger if clicking on the card itself, not buttons
+        if (!e.target.closest('.project-btn')) {
+            const projectId = this.getAttribute('data-project');
+            if (projectId === 'ecommerce') {
+                openEcommerceProject();
+            } else {
+                showProjectDetails(projectId);
+            }
+        }
+    });
+});

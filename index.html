@@ -87,7 +87,7 @@
         <div class="section-container">
             <h2 class="section-title animate-on-scroll">Featured Projects</h2>
             <div class="projects-grid">
-                <div class="project-card animate-on-scroll">
+                <div class="project-card animate-on-scroll ecommerce-project" onclick="openEcommerceProject()">
                     <div class="project-image">
                         <i class="fas fa-shopping-cart"></i>
                     </div>
@@ -100,9 +100,19 @@
                             <span class="tech-tag">MongoDB</span>
                             <span class="tech-tag">Express</span>
                         </div>
+                        <div class="project-actions">
+                            <button class="project-btn primary" onclick="openEcommerceProject()">
+                                <i class="fas fa-external-link-alt"></i>
+                                Live Demo
+                            </button>
+                            <button class="project-btn secondary" onclick="event.stopPropagation(); showProjectDetails('ecommerce')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="project-card animate-on-scroll delay-1">
+                <div class="project-card animate-on-scroll delay-1" onclick="showProjectDetails('fitness')">
                     <div class="project-image">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
@@ -115,9 +125,15 @@
                             <span class="tech-tag">Redux</span>
                             <span class="tech-tag">TypeScript</span>
                         </div>
+                        <div class="project-actions">
+                            <button class="project-btn secondary" onclick="event.stopPropagation(); showProjectDetails('fitness')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="project-card animate-on-scroll delay-2">
+                <div class="project-card animate-on-scroll delay-2" onclick="showProjectDetails('analytics')">
                     <div class="project-image">
                         <i class="fas fa-chart-line"></i>
                     </div>
@@ -130,12 +146,27 @@
                             <span class="tech-tag">Python</span>
                             <span class="tech-tag">FastAPI</span>
                         </div>
+                        <div class="project-actions">
+                            <button class="project-btn secondary" onclick="event.stopPropagation(); showProjectDetails('analytics')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Project Modal -->
+    <div id="projectModal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
     <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="section-container">
